@@ -1,0 +1,27 @@
+{
+  "name": "testing-watson-with-newman",
+  "version": "1.0.0",
+  "description": "Testing Watson Assitant with Postman and Newman",
+  "main": "index.js",
+  "scripts": {
+    "test": "newman run watson-col.json -e watson-env.json -r cli,htmlextra"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/manerajona/testing-watson-with-newman.git"
+  },
+  "keywords": [
+    "e2e",
+    "qa-automation"
+  ],
+  "author": "Jonathan Manera",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/manerajona/testing-watson-with-newman/issues"
+  },
+  "homepage": "https://github.com/manerajona/testing-watson-with-newman#readme",
+  "dependencies": {
+    "newman": "^5.3.2",
+    "newman-reporter-htmlextra": "^1.22.9"
+  }
+}

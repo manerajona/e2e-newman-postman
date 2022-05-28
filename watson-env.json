@@ -1,0 +1,45 @@
+{
+	"id": "e22d3b43-a542-43f5-9fd0-a8ef0ee91790",
+	"name": "watson-env",
+	"values": [
+		{
+			"key": "instance-id",
+			"value": "",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "assistant-id",
+			"value": "",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "api-key",
+			"value": "",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "assistant-watson-url",
+			"value": "https://api.us-south.assistant.watson.cloud.ibm.com",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "version",
+			"value": "",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "session-id",
+			"value": "",
+			"type": "default",
+			"enabled": true
+		}
+	],
+	"_postman_variable_scope": "environment",
+	"_postman_exported_at": "2022-05-25T21:19:48.593Z",
+	"_postman_exported_using": "Postman/9.19.3"
+}

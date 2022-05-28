@@ -1,0 +1,366 @@
+{
+	"info": {
+		"_postman_id": "34a39c67-3438-4b4e-81e8-504dc5df8ed7",
+		"name": "WatsonAssistant",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "4970032"
+	},
+	"item": [
+		{
+			"name": "createSession",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const timeElapsed = Date.now()",
+							"pm.environment.set('version', new Date(timeElapsed).toISOString().split('T')[0])"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"try {",
+							"    const statusCode = 201",
+							"    pm.test(`Status code is ${statusCode}`, () => pm.response.to.have.status(statusCode))",
+							"",
+							"    const responseTimeInMillis = 1000",
+							"    pm.test(`Response time is less than ${responseTimeInMillis}ms`, () => pm.expect(pm.response.responseTime).to.be.below(responseTimeInMillis))",
+							"",
+							"    pm.test('validate shcema', () => {",
+							"        const shema = JSON.parse('{\"type\":\"object\",\"properties\":{\"session_id\":{\"type\":\"string\"}},\"required\":[\"session_id\"]}')",
+							"        pm.expect(pm.response.json()).to.have.jsonSchema(shema)",
+							"    });",
+							"",
+							"} catch(ex) {",
+							"    tests['exception running tests: ' + JSON.stringify(ex)]",
+							"}",
+							"",
+							"pm.environment.set('session-id', pm.response.json().session_id)"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "{{assistant-watson-url}}/instances/:instance-id/v2/assistants/:assistant-id/sessions?version={{version}}",
+					"host": [
+						"{{assistant-watson-url}}"
+					],
+					"path": [
+						"instances",
+						":instance-id",
+						"v2",
+						"assistants",
+						":assistant-id",
+						"sessions"
+					],
+					"query": [
+						{
+							"key": "version",
+							"value": "{{version}}"
+						}
+					],
+					"variable": [
+						{
+							"key": "instance-id",
+							"value": "{{instance-id}}"
+						},
+						{
+							"key": "assistant-id",
+							"value": "{{assistant-id}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "sendInputSateful",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"try {",
+							"    const statusCode = 200",
+							"    pm.test(`Status code is ${statusCode}`, () => pm.response.to.have.status(statusCode))",
+							"",
+							"    const responseTimeInMillis = 1000",
+							"    pm.test(`Response time is less than ${responseTimeInMillis}ms`, () => pm.expect(pm.response.responseTime).to.be.below(responseTimeInMillis))",
+							"",
+							"    pm.test('validate shcema', () => {",
+							"        const shema = JSON.parse('{\"type\":\"object\",\"properties\":{\"output\":{\"type\":\"object\",\"properties\":{\"intents\":{\"type\":\"array\",\"items\":[{\"type\":\"object\",\"properties\":{\"intent\":{\"type\":\"string\"},\"confidence\":{\"type\":\"integer\"}},\"required\":[\"intent\",\"confidence\"]}]},\"entities\":{\"type\":\"array\",\"items\":[{\"type\":\"object\",\"properties\":{\"entity\":{\"type\":\"string\"},\"location\":{\"type\":\"array\",\"items\":[{\"type\":\"integer\"},{\"type\":\"integer\"}]},\"value\":{\"type\":\"string\"},\"confidence\":{\"type\":\"integer\"}},\"required\":[\"entity\",\"location\",\"value\",\"confidence\"]}]},\"generic\":{\"type\":\"array\",\"items\":[{\"type\":\"object\",\"properties\":{\"response_type\":{\"type\":\"string\"},\"text\":{\"type\":\"string\"}},\"required\":[\"response_type\",\"text\"]}]}},\"required\":[\"intents\",\"entities\",\"generic\"]},\"user_id\":{\"type\":\"string\"}},\"required\":[\"output\",\"user_id\"]}')",
+							"        pm.expect(pm.response.json()).to.have.jsonSchema(shema)",
+							"    });",
+							"",
+							"} catch(ex) {",
+							"    tests['exception running tests: ' + JSON.stringify(ex)]",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"input\": {\n        \"text\": \"menu\"\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{assistant-watson-url}}/instances/:instance-id/v2/assistants/:assistant-id/sessions/:session-id/message?version={{version}}",
+					"host": [
+						"{{assistant-watson-url}}"
+					],
+					"path": [
+						"instances",
+						":instance-id",
+						"v2",
+						"assistants",
+						":assistant-id",
+						"sessions",
+						":session-id",
+						"message"
+					],
+					"query": [
+						{
+							"key": "version",
+							"value": "{{version}}"
+						}
+					],
+					"variable": [
+						{
+							"key": "instance-id",
+							"value": "{{instance-id}}"
+						},
+						{
+							"key": "assistant-id",
+							"value": "{{assistant-id}}"
+						},
+						{
+							"key": "session-id",
+							"value": "{{session-id}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "sendInputSateless",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"try {",
+							"    const statusCode = 200",
+							"    pm.test(`Status code is ${statusCode}`, () => pm.response.to.have.status(statusCode))",
+							"",
+							"    const responseTimeInMillis = 1000",
+							"    pm.test(`Response time is less than ${responseTimeInMillis}ms`, () => pm.expect(pm.response.responseTime).to.be.below(responseTimeInMillis))",
+							"",
+							"    pm.test('validate shcema', () => {",
+							"        const shema = JSON.parse('{\"type\":\"object\",\"properties\":{\"output\":{\"type\":\"object\",\"properties\":{\"intents\":{\"type\":\"array\",\"items\":[{\"type\":\"object\",\"properties\":{\"intent\":{\"type\":\"string\"},\"confidence\":{\"type\":\"integer\"}},\"required\":[\"intent\",\"confidence\"]}]},\"entities\":{\"type\":\"array\",\"items\":[{\"type\":\"object\",\"properties\":{\"entity\":{\"type\":\"string\"},\"location\":{\"type\":\"array\",\"items\":[{\"type\":\"integer\"},{\"type\":\"integer\"}]},\"value\":{\"type\":\"string\"},\"confidence\":{\"type\":\"integer\"}},\"required\":[\"entity\",\"location\",\"value\",\"confidence\"]}]},\"generic\":{\"type\":\"array\",\"items\":[{\"type\":\"object\",\"properties\":{\"response_type\":{\"type\":\"string\"},\"text\":{\"type\":\"string\"}},\"required\":[\"response_type\",\"text\"]}]}},\"required\":[\"intents\",\"entities\",\"generic\"]},\"user_id\":{\"type\":\"string\"},\"context\":{\"type\":\"object\",\"properties\":{\"global\":{\"type\":\"object\",\"properties\":{\"system\":{\"type\":\"object\",\"properties\":{\"session_start_time\":{\"type\":\"string\"},\"turn_count\":{\"type\":\"integer\"},\"user_id\":{\"type\":\"string\"},\"state\":{\"type\":\"string\"}},\"required\":[\"session_start_time\",\"turn_count\",\"user_id\",\"state\"]},\"session_id\":{\"type\":\"string\"}},\"required\":[\"system\",\"session_id\"]},\"skills\":{\"type\":\"object\",\"properties\":{\"main skill\":{\"type\":\"object\",\"properties\":{\"system\":{\"type\":\"object\",\"properties\":{\"state\":{\"type\":\"string\"}},\"required\":[\"state\"]}},\"required\":[\"system\"]}},\"required\":[\"main skill\"]}},\"required\":[\"global\",\"skills\"]}},\"required\":[\"output\",\"user_id\",\"context\"]}')",
+							"        pm.expect(pm.response.json()).to.have.jsonSchema(shema)",
+							"    });",
+							"",
+							"} catch(ex) {",
+							"    tests['exception running tests: ' + JSON.stringify(ex)]",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"input\": {\n        \"text\": \"menu\"\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{assistant-watson-url}}/instances/:instance-id/v2/assistants/:assistant-id/message?version={{version}}",
+					"host": [
+						"{{assistant-watson-url}}"
+					],
+					"path": [
+						"instances",
+						":instance-id",
+						"v2",
+						"assistants",
+						":assistant-id",
+						"message"
+					],
+					"query": [
+						{
+							"key": "version",
+							"value": "{{version}}"
+						}
+					],
+					"variable": [
+						{
+							"key": "instance-id",
+							"value": "{{instance-id}}"
+						},
+						{
+							"key": "assistant-id",
+							"value": "{{assistant-id}}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "removeSession",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"try {",
+							"    const statusCode = 200",
+							"    pm.test(`Status code is ${statusCode}`, () => pm.response.to.have.status(statusCode))",
+							"",
+							"    const responseTimeInMillis = 1000",
+							"    pm.test(`Response time is less than ${responseTimeInMillis}ms`, () => pm.expect(pm.response.responseTime).to.be.below(responseTimeInMillis))",
+							"",
+							"    const testCase = 'deleteSession'",
+							"    const jsonData = pm.response.json()",
+							"",
+							"    pm.test(`Test case: ${testCase}`, () => {",
+							"        pm.expect(jsonData).to.be.empty",
+							"    });",
+							"",
+							"} catch(ex) {",
+							"    tests['exception running tests: ' + JSON.stringify(ex)]",
+							"}"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "gZ2Hew-_8TadHZBr0lUiAANQNtRqSFOVoZW5xr4MOd59",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "apikey",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"type": "text",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "{{assistant-watson-url}}/instances/:instance-id/v2/assistants/:assistant-id/sessions/:session-id?version={{version}}",
+					"host": [
+						"{{assistant-watson-url}}"
+					],
+					"path": [
+						"instances",
+						":instance-id",
+						"v2",
+						"assistants",
+						":assistant-id",
+						"sessions",
+						":session-id"
+					],
+					"query": [
+						{
+							"key": "version",
+							"value": "{{version}}"
+						}
+					],
+					"variable": [
+						{
+							"key": "instance-id",
+							"value": "{{instance-id}}"
+						},
+						{
+							"key": "assistant-id",
+							"value": "{{assistant-id}}"
+						},
+						{
+							"key": "session-id",
+							"value": "{{session-id}}"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "basic",
+		"basic": [
+			{
+				"key": "password",
+				"value": "{{api-key}}",
+				"type": "string"
+			},
+			{
+				"key": "username",
+				"value": "apikey",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
